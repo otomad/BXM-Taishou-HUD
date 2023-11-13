@@ -1,0 +1,13 @@
+{
+	"name": "bxm-taishou-hud",
+	"version": "1.0.0",
+	"description": "BXM 大赏 叠加层",
+	"main": "www.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node src/www.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": ""
+}
