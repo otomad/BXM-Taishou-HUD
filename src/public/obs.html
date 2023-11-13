@@ -6,16 +6,76 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<title>BXM 大赏 - 演示</title>
+	<style>
+		body {
+			background-color: black;
+			color: white;
+			color-scheme: dark;
+			margin: 0;
+		}
+
+		img {
+			display: block;
+			width: 100dvw;
+			height: 100dvh;
+		}
+
+		.status-bar {
+			position: absolute;
+			top: 0;
+			width: 100dvw;
+			background-color: #0008;
+			backdrop-filter: blur(5px);
+			text-align: center;
+			padding: 8px 0;
+			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
+		}
+
+		.status-bar.hide {
+			translate: 0 -100%;
+			transition-timing-function: cubic-bezier(0, 0, 1, 0);
+		}
+	</style>
 </head>
 
 <body>
 	<div class="container">
 		<div class="video">
-			<div id="status">
-				作品名
+			<img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" />
+			<div class="status-bar hide">
+				<div id="status">作品名</div>
 			</div>
 		</div>
 	</div>
+
+	<script type="module">
+		const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+		let webSocket;
+
+		function start() {
+			if (webSocket) webSocket.close();
+
+			webSocket = new WebSocket("ws://localhost:2333/ws");
+
+			webSocket.onmessage = async e => {
+				const { data } = e;
+				if (!data) return;
+				const status = document.getElementById("status");
+				status.textContent = data;
+				const statusBar = status.parentElement;
+				statusBar.classList.remove("hide");
+				await delay(1000);
+				statusBar.classList.add("hide");
+			};
+
+			webSocket.onclose = () => {
+				webSocket = null;
+			};
+		}
+
+		start();
+	</script>
 </body>
 
 </html>
