@@ -6,12 +6,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<title>BXM 大赏 - 演示</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter&family=Noto+Sans+SC&display=swap" rel="stylesheet">
 	<style>
 		body {
-			background-color: black;
+			background-color: transparent;
 			color: white;
 			color-scheme: dark;
 			margin: 0;
+			width: 1920px;
+			height: 1080px;
+			font-family: Inter, "Noto Sans SC", sans-serif;
+			font-weight: 400;
 		}
 
 		img {
@@ -23,16 +30,17 @@
 		.status-bar {
 			position: absolute;
 			top: 0;
-			width: 100dvw;
-			background-color: #0008;
-			backdrop-filter: blur(5px);
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0.7);
+			/* backdrop-filter: blur(5px); */
 			text-align: center;
 			padding: 8px 0;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
+			font-size: 2rem;
 		}
 
 		.status-bar.hide {
-			translate: 0 -100%;
+			transform: translateY(-100%);
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 	</style>
@@ -41,7 +49,7 @@
 <body>
 	<div class="container">
 		<div class="video">
-			<img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" />
+			<!-- <img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" /> -->
 			<div class="status-bar hide">
 				<div id="status">作品名</div>
 			</div>
@@ -65,7 +73,7 @@
 				status.textContent = data;
 				const statusBar = status.parentElement;
 				statusBar.classList.remove("hide");
-				await delay(1000);
+				await delay(2000);
 				statusBar.classList.add("hide");
 			};
 
