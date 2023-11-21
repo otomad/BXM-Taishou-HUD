@@ -62,8 +62,8 @@
 	</div>
 
 	<script type="module">
+		const APPARENT_LINE_HEIGHT = 14;
 		const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 		let webSocket;
 
 		function start() {
@@ -74,11 +74,13 @@
 			webSocket.onmessage = async e => {
 				const { data } = e;
 				if (!data) return;
-				const status = document.getElementById("status");
+				const status = document.getElementById("status"),
+					  status_font_size = parseFloat(getComputedStyle(status).fontSize);
 				status.textContent = data;
 				const statusBar = status.parentElement;
 				statusBar.classList.remove("hide");
-				await delay(5000);
+				const lines = status.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
+				await delay(5000 * lines);
 				statusBar.classList.add("hide");
 			};
 
