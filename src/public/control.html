@@ -271,9 +271,7 @@
 			const msg = text.value;
 			if (!msg) return;
 			text.value = "";
-			const url = new URL("/api/send");
-			url.searchParams.set("msg", msg);
-			fetch(url);
+			fetch("/api/send?msg=" + msg);
 		});
 
 		const phrases = await(await fetch("/api/phrases")).json();
