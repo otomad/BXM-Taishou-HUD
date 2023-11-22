@@ -41,9 +41,9 @@
 			margin: 0;
 			width: 1920px;
 			height: 1080px;
-			font-family: Inter, "Noto Sans CJK SC", sans-serif;
-			font-weight: 700;
-			letter-spacing: 0.1em;
+			font-family: "Inter Variable", Inter, "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+			font-weight: 500;
+			letter-spacing: 0.05em;
 		}
 
 		* {
@@ -77,25 +77,18 @@
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 
-		#status {
+		.status-bar>div:nth-child(1) {
 			display: flex;
-			justify-content: center;
-			align-items: center;
-			flex-direction: column;
-			gap: 5px;
-		}
-
-		#status span:nth-child(2) {
-			font-size: 24px;
-			font-weight: 500;
-		}
-
-		#status div {
-			display: flex;
-			flex-direction: row;
 			justify-content: center;
 			align-items: center;
 			gap: 4px;
+			margin-bottom: 5px;
+		}
+
+		#state {
+			font-size: 24px;
+			font-weight: 400;
+			letter-spacing: 0.1em;
 		}
 	</style>
 </head>
@@ -125,11 +118,11 @@
 				const { data: r } = e;
 				if (!r) return;
 				const data = JSON.parse(r);
-				
+
 				const icon = document.getElementById("icon"),
-					  state = document.getElementById("state"),
-					  text = document.getElementById("status"),
-					  status_font_size = parseFloat(getComputedStyle(text).fontSize);
+					state = document.getElementById("state"),
+					text = document.getElementById("status"),
+					status_font_size = parseFloat(getComputedStyle(text).fontSize);
 				icon.innerText = data.icon;
 				state.innerText = data.status;
 				text.innerText = data.text;
