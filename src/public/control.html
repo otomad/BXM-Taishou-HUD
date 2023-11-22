@@ -271,7 +271,7 @@
 			const msg = text.value;
 			if (!msg) return;
 			text.value = "";
-			fetch("/api/send?msg=" + msg);
+			fetch("/api/send?msg=" + encodeURIComponent(msg));
 		});
 
 		const phrases = await(await fetch("/api/phrases")).json();
