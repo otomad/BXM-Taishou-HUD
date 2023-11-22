@@ -255,6 +255,8 @@
 				</div>
 
 				<div class="form">
+					<input type="text" id="icon" />
+					<input type="text" id="status" />
 					<input type="text" id="text" />
 					<button type="button" class="btn" id="send-btn">发送</button>
 				</div>
@@ -265,23 +267,35 @@
 	</div>
 
 	<script type="module">
-		const text = document.getElementById("text");
-		const sendBtn = document.getElementById("send-btn");
+		const icon = document.getElementById("icon"),
+			  state = document.getElementById("status"),
+			  text = document.getElementById("text"),
+			  sendBtn = document.getElementById("send-btn");
 
 		sendBtn.addEventListener("click", () => {
-			const msg = text.value;
-			if (!msg) return;
+			const msg = {
+				icon: icon.value,
+				status: state.value,
+				text: text.value
+			};
+			icon.value = "";
+			state.value = "";
 			text.value = "";
-			fetch("/api/send?msg=" + encodeURIComponent(msg));
+			fetch("/api/send?msg=" + encodeURIComponent(JSON.stringify(msg)));
 		});
 
 		const phrases = await(await fetch("/api/phrases")).json();
-		const onClickPhrase = e => text.value = e.currentTarget.textContent;
+		const onClickPhrase = function(e) {
+			const { icon: i, status: s, text: t } = phrases[Array.prototype.indexOf.call(this.parentNode.childNodes, this)];
+			icon.value = i;
+			state.value = s;
+			text.value = t;
+		};
 		for (const phrase of phrases) {
 			const label = document.createElement("button");
 			label.type = "button";
 			label.classList.add("label");
-			label.textContent = phrase;
+			label.textContent = JSON.stringify(phrase);
 			label.addEventListener("click", onClickPhrase);
 			document.getElementById("phrases").append(label);
 		}

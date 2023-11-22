@@ -69,6 +69,7 @@
 			font-size: 2rem;
 			justify-content: center;
 			align-items: center;
+			flex-direction: column;
 		}
 
 		.status-bar.hide {
@@ -104,6 +105,7 @@
 		<div class="video">
 			<!-- <img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" /> -->
 			<div class="status-bar hide">
+				<div><span id="icon" class="icon">play_arrow</span><span id="state">正在播放</span></div>
 				<div id="status">作品名</div>
 			</div>
 		</div>
@@ -120,15 +122,21 @@
 			webSocket = new WebSocket("ws://localhost:2333/ws");
 
 			webSocket.onmessage = async e => {
-				const { data } = e;
-				if (!data) return;
-				const status = document.getElementById("status"),
-					status_font_size = parseFloat(getComputedStyle(status).fontSize);
-				status.innerHTML = data;
-				const statusBar = status.parentElement;
+				const { data: r } = e;
+				if (!r) return;
+				const data = JSON.parse(r);
+				
+				const icon = document.getElementById("icon"),
+					  state = document.getElementById("state"),
+					  text = document.getElementById("status"),
+					  status_font_size = parseFloat(getComputedStyle(text).fontSize);
+				icon.innerText = data.icon;
+				state.innerText = data.status;
+				text.innerText = data.text;
+
+				const statusBar = text.parentElement;
 				statusBar.classList.remove("hide");
-				const lines = status.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
-				console.log(lines);
+				const lines = text.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
 				await delay(5000 * lines);
 				statusBar.classList.add("hide");
 			};
