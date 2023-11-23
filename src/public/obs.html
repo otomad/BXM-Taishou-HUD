@@ -11,15 +11,14 @@
 
 	<style>
 		@font-face {
-			font-family: 'Material Symbols Outlined';
+			font-family: 'Material Icons';
 			font-style: normal;
-			font-weight: 100 700;
-			font-display: block;
-			src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v151/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2) format('woff2');
+			font-weight: 400;
+			src: url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
 		}
 
 		.icon {
-			font-family: 'Material Symbols Outlined';
+			font-family: 'Material Icons';
 			font-weight: normal;
 			font-style: normal;
 			font-size: 2rem;
@@ -32,6 +31,7 @@
 			direction: ltr;
 			-webkit-font-feature-settings: 'liga';
 			-webkit-font-smoothing: antialiased;
+			position: relative;
 		}
 
 		body {
@@ -41,7 +41,7 @@
 			margin: 0;
 			width: 1920px;
 			height: 1080px;
-			font-family: "Inter Variable", Inter, "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+			font-family: "Inter Variable", Inter, Roboto, "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
 			font-weight: 500;
 			letter-spacing: 0.05em;
 		}
@@ -83,12 +83,27 @@
 			align-items: center;
 			gap: 4px;
 			margin-bottom: 5px;
+			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
+		}
+
+		.status-bar.hide>div:nth-child(1) {
+			transform: translateY(-100%);
+			transition-timing-function: cubic-bezier(0, 0, 1, 0);
+		}
+
+		.status-bar>div:last-child {
+			margin-bottom: 3px;
 		}
 
 		#state {
 			font-size: 24px;
 			font-weight: 400;
 			letter-spacing: 0.1em;
+		}
+
+		#description {
+			font-size: 18px;
+			font-weight: 400;
 		}
 	</style>
 </head>
@@ -100,6 +115,7 @@
 			<div class="status-bar hide">
 				<div><span id="icon" class="icon">play_arrow</span><span id="state">正在播放</span></div>
 				<div id="status">作品名</div>
+				<div id="description">注释</div>
 			</div>
 		</div>
 	</div>
@@ -122,10 +138,12 @@
 				const icon = document.getElementById("icon"),
 					state = document.getElementById("state"),
 					text = document.getElementById("status"),
+					description = document.getElementById("description"),
 					status_font_size = parseFloat(getComputedStyle(text).fontSize);
 				icon.innerText = data.icon;
 				state.innerText = data.status;
 				text.innerText = data.text;
+				description.innerText = data.description
 
 				const statusBar = text.parentElement;
 				statusBar.classList.remove("hide");
