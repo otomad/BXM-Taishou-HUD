@@ -23,7 +23,7 @@
 		* {
 			box-sizing: border-box;
 			/* transition: all cubic-bezier(0, 0, 0, 1) 250ms; */
-			font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+			font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", sans-serif;
 		}
 
 		.wrapper {
@@ -57,7 +57,8 @@
 			width: 100%;
 		}
 
-		input[type="text"] {
+		input[type="text"],
+		input[type="search"] {
 			border: 0;
 			border-radius: 5px;
 			background-color: white;
@@ -68,11 +69,13 @@
 			font-size: 13px;
 		}
 
-		input[type="text"]:focus-visible {
+		input[type="text"]:focus-visible,
+		input[type="search"]:focus-visible {
 			box-shadow: 0px 0px 0px 3px rgba(0, 122, 255, 0.50), 0px 0px 0px 0.5px rgba(0, 0, 0, 0.05), 0px 0.5px 2.5px 0px rgba(0, 0, 0, 0.30);
 		}
 
-		input[type="text"]::placeholder {
+		input[type="text"]::placeholder,
+		input[type="search"]::placeholder {
 			color: black;
 			opacity: 0.25;
 		}
@@ -198,6 +201,14 @@
 			margin-left: auto;
 		}
 
+		.menu-bar .name {
+			font-weight: 600;
+		}
+
+		.menu-bar #time {
+			font-variant-numeric: tabular-nums;
+		}
+
 		.title-bar {
 			position: relative;
 			display: flex;
@@ -251,7 +262,8 @@
 		<a><img src="favicon.ico" /></a>
 		<b>发送内容</b>
 		<a href="obs" target="_blank">输出</a>
-		<span class="right">BXM 作者选 - 后台</span>
+		<span class="right name">BXM 作者选 - 后台</span>
+		<span id="time"></span>
 	</div>
 
 	<div class="wrapper">
@@ -274,10 +286,10 @@
 				</div>
 
 				<div class="form">
-					<input type="text" id="icon" placeholder="图标"/>
-					<input type="text" id="status" placeholder="状态" />
-					<input type="text" id="text" placeholder="内容" />
-					<input type="text" id="description" placeholder="注释" />
+					<input type="search" id="icon" placeholder="图标"/>
+					<input type="search" id="status" placeholder="状态" />
+					<input type="search" id="text" placeholder="内容" />
+					<input type="search" id="description" placeholder="注释" />
 					<button type="button" class="btn" id="send-btn">发送</button>
 				</div>
 			</div>
@@ -288,10 +300,10 @@
 
 	<script type="module">
 		const icon = document.getElementById("icon"),
-			  state = document.getElementById("status"),
-			  text = document.getElementById("text"),
+				state = document.getElementById("status"),
+				text = document.getElementById("text"),
 				description = document.getElementById("description"),
-			  sendBtn = document.getElementById("send-btn");
+				sendBtn = document.getElementById("send-btn");
 
 		sendBtn.addEventListener("click", () => {
 			const msg = {
@@ -323,6 +335,51 @@
 			label.addEventListener("click", onClickPhrase);
 			document.getElementById("phrases").append(label);
 		}
+
+
+		/**
+		 * 页面右上角的时钟
+		 * by Aira
+		 */
+		function clock() {
+			// 获取时间
+			const now = new Date();
+
+			// 声明变量
+			let hours = now.getHours();
+			let minutes = now.getMinutes();
+			let seconds = now.getSeconds();
+			let year = now.getFullYear();
+			let month = now.getMonth() + 1;
+			let day = now.getDate();
+
+			// 使用checkTime检查时间位数并修改
+			hours = checkTime(hours);
+			minutes = checkTime(minutes);
+			seconds = checkTime(seconds);
+
+			// 显示时间
+			document.getElementById("time").innerHTML = year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds;
+
+			// 0.1秒循环一次
+			setTimeout(clock, 100);
+		}
+
+
+		/**
+		 * 时间位数检查
+		 * @param 使用getXXX获取到的时间
+		 * @returns 如果为个位数则在前方添加0
+		 */
+		function checkTime(i) {
+			if (i < 10) {
+				i = "0" + i
+			};
+			return i;
+		}
+
+		// 页面加载时启用
+		window.addEventListener("load", clock);
 	</script>
 </body>
 
