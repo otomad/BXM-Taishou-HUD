@@ -152,7 +152,7 @@
 						i = s.split("").reverse().join("").search(/(?<!^)\b/);
 					if (i != -1) {
 						pages.push(s.slice(0, PAGE_LIMIT - i));
-						data.text = data.text.slice(PAGE_LIMIT - i + 1);
+						data.text = data.text.slice(PAGE_LIMIT - i);
 					}
 					else {
 						pages.push(s);
