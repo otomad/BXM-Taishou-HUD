@@ -143,13 +143,30 @@
 					status_font_size = parseFloat(getComputedStyle(text).fontSize);
 				icon.innerText = data.icon;
 				state.innerText = data.status;
-				text.innerText = data.text;
-				description.innerText = data.description
+				description.innerText = data.description;
+
+				const PAGE_LIMIT = 140;	
+				let pages = [];
+				while (data.text.length > 0) {
+					const s = data.text.slice(0, PAGE_LIMIT),
+						i = s.split("").reverse().join("").search(/(?<!^)\b/);
+					if (i != -1) {
+						pages.push(s.slice(0, PAGE_LIMIT - i));
+						data.text = data.text.slice(PAGE_LIMIT - i + 1);
+					}
+					else {
+						pages.push(s);
+						data.text = data.text.slice(PAGE_LIMIT);
+					}
+				}
 
 				const statusBar = text.parentElement;
 				statusBar.classList.remove("hide");
-				const lines = text.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
-				await delay(5000 * lines);
+				for (const page of pages) {
+					text.innerText = page;
+					const lines = text.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
+					await delay(5000 * lines);	
+				}
 				statusBar.classList.add("hide");
 			};
 
