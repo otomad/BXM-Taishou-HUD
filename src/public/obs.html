@@ -149,7 +149,7 @@
 				let pages = [];
 				while (data.text.length > 0) {
 					const s = data.text.slice(0, PAGE_LIMIT),
-						i = s.split("").reverse().join("").search(/(?<!^)\b/);
+						i = s.split("").reverse().join("").search(/(?<!^)(?:(?<![\p{Letter}\p{Number}_])(?=[\p{Letter}\p{Number}_])|(?<=[\p{Letter}\p{Number}_])(?![\p{Letter}\p{Number}_]))/u);
 					if (i != -1) {
 						pages.push(s.slice(0, PAGE_LIMIT - i));
 						data.text = data.text.slice(PAGE_LIMIT - i);
