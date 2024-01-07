@@ -6,11 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<title>控制 - BXM 作者选</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="stylesheet" href="material-icons.css" />
 	<style>
 		body {
-			background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0.1) 100%);
-			color: rgba(0, 0, 0, 0.85);
-			/* color-scheme: dark; */
+			background-image: linear-gradient(to top, white 0%, #0000001a 100%);
+			color: #000000d9;
+			color-scheme: light;
 			margin: 0;
 			height: 100vh;
 			overflow: hidden;
@@ -36,13 +39,13 @@
 			width: fit-content;
 			margin: 0 auto;
 			background-color: white;
-			box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.25), 0px 36px 100px 0px rgba(0, 0, 0, 0.40), 0px 0px 3px 0px rgba(255, 255, 255, 0.10) inset;
+			box-shadow: 0 0 3px #00000040, 0 36px 100px #00000066, 0 0 3px #ffffff1a inset;
 			border-radius: 10px;
 			overflow: hidden;
 			max-width: 90dvw;
 		}
 
-		.content {
+		.window-content {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
@@ -57,156 +60,172 @@
 			width: 100%;
 		}
 
-		input[type="text"],
-		input[type="search"] {
-			border: 0;
-			border-radius: 5px;
-			background-color: white;
-			box-shadow: 0px 0px 0px 0.5px rgba(0, 0, 0, 0.05), 0px 0.5px 2.5px 0px rgba(0, 0, 0, 0.30);
-			color: inherit;
-			min-width: 24px;
-			padding: 3px 7px;
-			font-size: 13px;
-		}
+		input {
+			&[type="text"],
+			&[type="search"] {
+				border: 0;
+				border-radius: 5px;
+				background-color: white;
+				box-shadow: 0 0 0 0.5px #0000000d, 0 0.5px 2.5px #0000004d;
+				color: inherit;
+				min-width: 24px;
+				padding: 3px 7px;
+				font-size: 13px;
 
-		input[type="text"]:focus-visible,
-		input[type="search"]:focus-visible {
-			box-shadow: 0px 0px 0px 3px rgba(0, 122, 255, 0.50), 0px 0px 0px 0.5px rgba(0, 0, 0, 0.05), 0px 0.5px 2.5px 0px rgba(0, 0, 0, 0.30);
-		}
+				&:focus-visible {
+					box-shadow: 0 0 0 3px #007aff80, 0 0 0 0.5px #0000000d, 0 0.5px 2.5px #0000004d;
+				}
+			}
 
-		input[type="text"]::placeholder,
-		input[type="search"]::placeholder {
-			color: black;
-			opacity: 0.25;
-		}
+			&::placeholder {
+				color: black;
+				opacity: 0.25;
+			}
 
-		input#text {
-			flex-grow: 1;
-			width: 300px;
-		}
+			&#text {
+				flex-grow: 1;
+				width: 300px;
+			}
 
-		input:not(#text) {
-			width: 80px;
-		}
+			&:not(#text) {
+				width: 80px;
+			}
 
-		input#description {
-			width: 200px;
+			&#description {
+				width: 200px;
+			}
 		}
 
 		button {
 			border: none;
 			display: block;
-		}
 
-		button.btn {
-			padding: 3px 7px;
-			border: none;
-			border-radius: 5px;
-			background: linear-gradient(180deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.00) 100%), #007AFF;
-			box-shadow: 0px 0px 0px 0.5px rgba(0, 122, 255, 0.12), 0px 1px 2.5px 0px rgba(0, 122, 255, 0.24);
-			color: white;
-			font-size: 13px;
-			line-height: 16px;
-			user-select: none;
-			overflow: hidden;
-			position: relative;
-			flex-shrink: 0;
-		}
+			&.btn {
+				padding: 3px 7px;
+				border: none;
+				border-radius: 5px;
+				background: linear-gradient(180deg, #ffffff2b 0%, transparent 100%), #007aff;
+				box-shadow: 0 0 0 0.5px #007aff1f, 0 1px 2.5px #007aff3d;
+				color: white;
+				font-size: 13px;
+				line-height: 16px;
+				user-select: none;
+				overflow: hidden;
+				position: relative;
+				flex-shrink: 0;
 
-		button.btn:focus-visible {
-			box-shadow: 0px 0px 0px 3px rgba(0, 122, 255, 0.50), 0px 0px 0px 0.5px rgba(0, 122, 255, 0.12), 0px 1px 2.5px 0px rgba(0, 122, 255, 0.24);
-		}
+				&:focus-visible {
+					box-shadow: 0 0 0 3px #007aff80, 0 0 0 0.5px #007aff1f, 0 1px 2.5px #007aff3d;
+				}
 
-		button.btn:active::before {
-			position: absolute;
-			content: "";
-			inset: 0;
-			background-color: rgba(0, 0, 0, 0.1);
+				&:active::before {
+					position: absolute;
+					content: "";
+					inset: 0;
+					background-color: #0000001a;
+				}
+			}
 		}
 
 		.phrases-container {
 			overflow: hidden;
 			width: 100%;
 			border-radius: 6px;
-			box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-		}
+			box-shadow: inset 0 0 0 1px #0000000a;
 
-		#phrases {
-			display: flex;
-			flex-direction: column;
-			width: 100%;
-			overflow: auto;
-			max-height: 70dvh;
-			flex-grow: 1;
+			#phrases {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				overflow: auto;
+				max-height: 70dvh;
+				flex-grow: 1;
+			}
 		}
 
 		.label {
 			display: flex;
+			align-items: center;
 			border-radius: 0;
 			background-color: #9e9e9e;
 			color: black;
 			padding: 4px 8px;
 			font-size: 13px;
-			flex-shrink: 0;
-			text-align: start;
-		}
+			gap: 10px;
 
-		.label:nth-child(odd) {
-			background-color: rgba(0, 0, 0, 0.01);
-		}
+			.content {
+				text-align: justify;
 
-		.label:nth-child(even) {
-			background-color: rgba(0, 0, 0, 0.04);
-		}
+				> * {
+					margin-right: 0.5em;
+				}
+			}
 
-		#phrases .label:focus,
-		#phrases .label:active {
-			background-color: #2962D9;
-			color: white;
+			.status {
+				font-weight: bold;
+			}
+
+			.description {
+				opacity: 0.7;
+			}
+
+			&:nth-child(odd) {
+				background-color: #00000003;
+			}
+
+			&:nth-child(even) {
+				background-color: #0000000a;
+			}
+
+			&:focus,
+			&:active {
+				background-color: #2962d9;
+				color: white;
+			}
 		}
 
 		.menu-bar {
 			display: flex;
 			height: 24px;
-			background-color: rgba(255, 255, 255, 0.5);
+			background-color: #ffffff80;
 			padding: 0 10px;
 			align-items: center;
 			backdrop-filter: blur(25px);
-		}
 
-		.menu-bar>* {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 0 13px;
-			height: 24px;
-			text-decoration: none;
-			color: black;
-			font-size: 13px;
-			border-radius: 4px;
-			user-select: none;
-			margin: 0 -4px;
-		}
+			> * {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 13px;
+				height: 24px;
+				text-decoration: none;
+				color: black;
+				font-size: 13px;
+				border-radius: 4px;
+				user-select: none;
+				margin: 0 -4px;
+			}
 
-		.menu-bar>*:active {
-			background-color: #e6e6e6;
-		}
+			> :active {
+				background-color: #e6e6e6;
+			}
 
-		.menu-bar img {
-			height: 20px;
-			filter: brightness(0);
-		}
+			img {
+				height: 20px;
+				filter: brightness(0);
+			}
 
-		.menu-bar .right {
-			margin-left: auto;
-		}
+			.right {
+				margin-left: auto;
+			}
 
-		.menu-bar .name {
-			font-weight: 600;
-		}
+			.name {
+				font-weight: 600;
+			}
 
-		.menu-bar #time {
-			font-variant-numeric: tabular-nums;
+			#time {
+				font-variant-numeric: tabular-nums;
+			}
 		}
 
 		.title-bar {
@@ -217,9 +236,9 @@
 			height: 28px;
 			font-weight: bold;
 			font-size: 13px;
-			background-color: rgba(250, 250, 250, 0.80);
+			background-color: #fafafacc;
 			width: 100%;
-			box-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.10), 0px 0.5px 0px 0px rgba(0, 0, 0, 0.10);
+			box-shadow: 0 1px 0 #0000001a, 0 0.5px 0 #0000001a;
 			user-select: none;
 		}
 
@@ -229,37 +248,32 @@
 			gap: 8px;
 			padding: 0 8px;
 			left: 0;
-		}
 
-		.window-controls .close {
-			width: 12px;
-			height: 12px;
-			border-radius: 100%;
-			border: 0.5px solid rgba(0, 0, 0, 0.20);
-			background: #FF5F57;
-		}
+			* {
+				width: 12px;
+				height: 12px;
+				border-radius: 100%;
+				border: 0.5px solid #00000033;
+			}
 
-		.window-controls .minimal {
-			width: 12px;
-			height: 12px;
-			border-radius: 100%;
-			border: 0.5px solid rgba(0, 0, 0, 0.20);
-			background: #FEBC2E;
-		}
+			.close {
+				background: #ff5f57;
+			}
 
-		.window-controls .full {
-			width: 12px;
-			height: 12px;
-			border-radius: 100%;
-			border: 0.5px solid rgba(0, 0, 0, 0.20);
-			background: #28C840;
+			.minimal {
+				background: #febc2e;
+			}
+
+			.full {
+				background: #28c840;
+			}
 		}
 	</style>
 </head>
 
 <body>
 	<div class="menu-bar">
-		<a><img src="favicon.ico" /></a>
+		<a href="/"><img src="favicon.ico" /></a>
 		<b>发送内容</b>
 		<a href="obs" target="_blank">输出</a>
 		<span class="right name">BXM 作者选 - 后台</span>
@@ -280,13 +294,13 @@
 				<span>发送内容</span>
 			</div>
 
-			<div class="content">
+			<div class="window-content">
 				<div class="phrases-container">
 					<div id="phrases"></div>
 				</div>
 
 				<div class="form">
-					<input type="text" id="icon" placeholder="图标"/>
+					<input type="text" id="icon" placeholder="图标" />
 					<input type="text" id="status" placeholder="状态" />
 					<input type="text" id="text" placeholder="内容" />
 					<input type="text" id="description" placeholder="注释" />
@@ -300,86 +314,60 @@
 
 	<script type="module">
 		const icon = document.getElementById("icon"),
-				state = document.getElementById("status"),
-				text = document.getElementById("text"),
-				description = document.getElementById("description"),
-				sendBtn = document.getElementById("send-btn");
+			state = document.getElementById("status"),
+			text = document.getElementById("text"),
+			description = document.getElementById("description"),
+			sendBtn = document.getElementById("send-btn"),
+			time = document.getElementById("time");
 
 		sendBtn.addEventListener("click", () => {
 			const msg = {
 				icon: icon.value,
 				status: state.value,
 				text: text.value,
-				description: description.value
+				description: description.value,
 			};
-			icon.value = "";
-			state.value = "";
-			text.value = "";
-			description.value = "";
-			fetch("/api/send?msg=" + encodeURIComponent(JSON.stringify(msg)));
+			icon.value = state.value = text.value = description.value = "";
+			const url = new URL("/api/send");
+			url.searchParams.set("msg", msg);
+			fetch(url);
 		});
 
-		const phrases = await(await fetch("/api/phrases")).json();
-		const onClickPhrase = function(e) {
-			const { icon: i, status: s, text: t, description: d } = phrases[Array.prototype.indexOf.call(this.parentNode.childNodes, this)];
-			icon.value = i;
-			state.value = s;
-			text.value = t;
-			description.value = d;
-		};
+		const phrases = await (await fetch("/api/phrases")).json();
 		for (const phrase of phrases) {
 			const label = document.createElement("button");
 			label.type = "button";
 			label.classList.add("label");
-			label.textContent = JSON.stringify(phrase);
-			label.addEventListener("click", onClickPhrase);
+			label.innerHTML = `
+				<i class="icon">${phrase.icon}</i>
+				<div class="content">
+					${"status,text,description".split(",").map(item =>
+						`<span class="${item}">${phrase[item]}</span>`).join("")}
+				</div>
+			`;
+			label.addEventListener("click", () => {
+				const index = [...label.parentElement.children].indexOf(label);
+				({
+					icon: icon.value,
+					status: state.value,
+					text: text.value,
+					description: description.value,
+				} = phrases[index]);
+			});
 			document.getElementById("phrases").append(label);
 		}
 
-
-		/**
-		 * 页面右上角的时钟
-		 * by Aira
-		 */
-		function clock() {
-			// 获取时间
-			const now = new Date();
-
-			// 声明变量
-			let hours = now.getHours();
-			let minutes = now.getMinutes();
-			let seconds = now.getSeconds();
-			let year = now.getFullYear();
-			let month = now.getMonth() + 1;
-			let day = now.getDate();
-
-			// 使用checkTime检查时间位数并修改
-			hours = checkTime(hours);
-			minutes = checkTime(minutes);
-			seconds = checkTime(seconds);
-
-			// 显示时间
-			document.getElementById("time").innerHTML = year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds;
-
-			// 0.1秒循环一次
-			setTimeout(clock, 100);
-		}
-
-
-		/**
-		 * 时间位数检查
-		 * @param 使用getXXX获取到的时间
-		 * @returns 如果为个位数则在前方添加0
-		 */
-		function checkTime(i) {
-			if (i < 10) {
-				i = "0" + i
-			};
-			return i;
-		}
-
-		// 页面加载时启用
-		window.addEventListener("load", clock);
+		setInterval(() => {
+			time.textContent = new Intl.DateTimeFormat("zh-CN", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+				hour: "numeric",
+				minute: "numeric",
+				second: "numeric",
+				hour12: false,
+			}).format(new Date());
+		}, 1000);
 	</script>
 </body>
 

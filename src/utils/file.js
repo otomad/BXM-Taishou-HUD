@@ -13,3 +13,13 @@ export async function readFile(importMetaUrl, encoding, ...paths) {
 	const { __dirname } = useDirname(importMetaUrl);
 	return await fs.readFile(resolve(__dirname, ...paths), encoding);
 }
+
+export async function isFileExist(importMetaUrl, ...paths) {
+	const { __dirname } = useDirname(importMetaUrl);
+	try {
+		await fs.access(resolve(__dirname, ...paths), fs.constants.F_OK);
+		return true;
+	} catch {
+		return false;
+	}
+}

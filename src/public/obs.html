@@ -6,38 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 	<title>输出 - BXM 作者选</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link rel="stylesheet" href="material-icons.css" />
 	<style>
-		@font-face {
-			font-family: 'Material Icons';
-			font-style: normal;
-			font-weight: 400;
-			src: url(https://fonts.gstatic.com/s/materialicons/v140/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
-		}
-
-		.icon {
-			font-family: 'Material Icons';
-			font-weight: normal;
-			font-style: normal;
-			font-size: 2rem;
-			line-height: 1;
-			letter-spacing: normal;
-			text-transform: none;
-			display: inline-block;
-			white-space: nowrap;
-			word-wrap: normal;
-			direction: ltr;
-			font-feature-settings: 'liga';
-			-webkit-font-feature-settings: 'liga';
-			-webkit-font-smoothing: antialiased;
-			position: relative;
-		}
-
 		body {
 			background-color: transparent;
-			color: rgba(255, 255, 255, 0.8);
+			color: #ffffffcc;
 			color-scheme: dark;
 			margin: 0;
 			width: 1920px;
@@ -47,14 +22,21 @@
 			letter-spacing: 0.05em;
 		}
 
+		@supports (width: 100dvw) {
+			body {
+				width: 100dvw;
+				height: 100dvh;
+			}
+		}
+
 		* {
 			box-sizing: border-box;
 		}
 
 		img {
 			display: block;
-			width: 100dvw;
-			height: 100dvh;
+			width: 100%;
+			height: 100%;
 		}
 
 		.status-bar {
@@ -62,7 +44,7 @@
 			position: absolute;
 			top: 0;
 			width: 100%;
-			background-color: rgba(0, 0, 0, 0.8);
+			background-color: #000000cc;
 			/* backdrop-filter: blur(5px); */
 			text-align: center;
 			padding: 10px 16px;
@@ -78,7 +60,7 @@
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 
-		.status-bar>div:nth-child(1) {
+		.status-bar > div:nth-child(1) {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -87,12 +69,12 @@
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 		}
 
-		.status-bar.hide>div:nth-child(1) {
+		.status-bar.hide > div:nth-child(1) {
 			transform: translateY(-100%);
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 
-		.status-bar>div:last-child {
+		.status-bar > div:last-child {
 			margin-bottom: 3px;
 		}
 
@@ -132,18 +114,18 @@
 			webSocket = new WebSocket("ws://localhost:2333/ws");
 
 			webSocket.onmessage = async e => {
-				const { data: r } = e;
-				if (!r) return;
-				const data = JSON.parse(r);
+				const { data: response } = e;
+				if (!response) return;
+				const data = JSON.parse(response);
 
 				const icon = document.getElementById("icon"),
 					state = document.getElementById("state"),
 					text = document.getElementById("status"),
 					description = document.getElementById("description"),
-					status_font_size = parseFloat(getComputedStyle(text).fontSize);
-				icon.innerText = data.icon;
-				state.innerText = data.status;
-				description.innerText = data.description;
+					statusFontSize = parseFloat(getComputedStyle(text).fontSize);
+				icon.textContent = data.icon;
+				state.textContent = data.status;
+				description.textContent = data.description;
 
 				const PAGE_LIMIT = 140;
 				let pages = [];
@@ -164,7 +146,8 @@
 				statusBar.classList.remove("hide");
 				for (const page of pages) {
 					text.innerText = page;
-					const lines = text.clientHeight / (status_font_size + APPARENT_LINE_HEIGHT); // guaranteed to be int if everything works correctly
+					const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
+					// 如果一切正常，保证是整数。
 					await delay(5000 * lines);
 				}
 				statusBar.classList.add("hide");

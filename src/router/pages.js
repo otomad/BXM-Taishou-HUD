@@ -1,20 +1,32 @@
-import { readFile } from "../utils/file.js";
+import { isFileExist, readFile } from "../utils/file.js";
+import { extname } from "path"
 
 export default async function handleStaticPages(request, response) {
 	if (request.method === "GET") {
-		const { url } = request;
-		const pages = ["", "control", "obs"];
-		if (url === "/favicon.ico") {
-			response.setHeader("Content-type", "image/x-icon");
-			const buffer = await readFile(import.meta.url, undefined, "../public", "favicon.ico");
-			response.end(buffer);
-			return true;
-		} else for (const page of pages)
-			if (url === "/" + page) {
-				response.setHeader("Content-type", "text/html");
-				const content = await readFile(import.meta.url, "utf-8", "../public", (page || "index") + ".html");
-				response.end(content);
-				return true;
-			}
+		let { url } = request;
+		url = url.replace(/^\//, "");
+		url ||= "index";
+
+		let extension = extname(url).replace(/^\./, "");
+		if (!extension) {
+			extension = "html";
+			url += ".html";
+		}
+		const ext = (contentType, encoding) => ({ contentType, encoding });
+		const extensions = {
+			ico: ext("image/x-icon"),
+			html: ext("text/html", "utf-8"),
+			css: ext("text/css", "utf-8"),
+		}
+		let { contentType, encoding } = extensions[extension];
+		contentType ||= "application/octet-stream";
+
+		const isExist = await isFileExist(import.meta.url, "../public", url);
+		if (!isExist) return false;
+
+		response.setHeader("Content-type", contentType);
+		const buffer = await readFile(import.meta.url, encoding, "../public", url);
+		response.end(buffer);
+		return true;
 	}
 }
