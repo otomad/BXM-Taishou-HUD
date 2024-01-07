@@ -124,7 +124,15 @@
 					inset: 0;
 					background-color: #0000001a;
 				}
+
+				&.danger {
+					filter: hue-rotate(145deg); /* TODO: 有空记得换成真正的颜色。 */
+				}
 			}
+		}
+
+		#clear-btn {
+			margin-left: auto;
 		}
 
 		.phrases-container {
@@ -306,6 +314,8 @@
 					<input type="text" id="description" placeholder="注释" />
 					<button type="button" class="btn" id="send-btn">发送</button>
 				</div>
+
+				<button type="button" class="btn danger" id="clear-btn">紧急清屏</button>
 			</div>
 
 		</div>
@@ -318,9 +328,11 @@
 			text = document.getElementById("text"),
 			description = document.getElementById("description"),
 			sendBtn = document.getElementById("send-btn"),
+			clearBtn = document.getElementById("clear-btn"),
 			time = document.getElementById("time");
 
 		sendBtn.addEventListener("click", () => {
+			if (!text.value.trim()) return;
 			const msg = {
 				icon: icon.value,
 				status: state.value,
@@ -328,9 +340,13 @@
 				description: description.value,
 			};
 			icon.value = state.value = text.value = description.value = "";
-			const url = new URL("/api/send");
-			url.searchParams.set("msg", msg);
+			const url = new URL("/api/send", location.origin);
+			url.searchParams.set("msg", JSON.stringify(msg));
 			fetch(url);
+		});
+
+		clearBtn.addEventListener("click", () => {
+			fetch("/api/send?msg");
 		});
 
 		const phrases = await (await fetch("/api/phrases")).json();

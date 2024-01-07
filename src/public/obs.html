@@ -39,7 +39,7 @@
 			height: 100%;
 		}
 
-		.status-bar {
+		#status-bar {
 			display: flex;
 			position: absolute;
 			top: 0;
@@ -55,12 +55,16 @@
 			flex-direction: column;
 		}
 
-		.status-bar.hide {
+		#status-bar.hide {
 			transform: translateY(-100%);
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 
-		.status-bar > div:nth-child(1) {
+		#status-bar.emergency {
+			transition-duration: 100ms;
+		}
+
+		#status-bar > div:nth-child(1) {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -69,12 +73,12 @@
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 		}
 
-		.status-bar.hide > div:nth-child(1) {
+		#status-bar.hide > div:nth-child(1) {
 			transform: translateY(-100%);
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
 		}
 
-		.status-bar > div:last-child {
+		#status-bar > div:last-child {
 			margin-bottom: 3px;
 		}
 
@@ -95,7 +99,7 @@
 	<div class="container">
 		<div class="video">
 			<!-- <img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" /> -->
-			<div class="status-bar hide">
+			<div id="status-bar" class="hide">
 				<div><span id="icon" class="icon">play_arrow</span><span id="state">正在播放</span></div>
 				<div id="status">作品名</div>
 				<div id="description">注释</div>
@@ -105,7 +109,8 @@
 
 	<script type="module">
 		const APPARENT_LINE_HEIGHT = 14;
-		const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+		let timeoutId;
+		const delay = ms => new Promise(resolve => timeoutId = setTimeout(resolve, ms))
 		let webSocket;
 
 		function start() {
@@ -115,42 +120,52 @@
 
 			webSocket.onmessage = async e => {
 				const { data: response } = e;
-				if (!response) return;
-				const data = JSON.parse(response);
 
 				const icon = document.getElementById("icon"),
 					state = document.getElementById("state"),
 					text = document.getElementById("status"),
 					description = document.getElementById("description"),
+					statusBarEl = document.getElementById("status-bar"),
 					statusFontSize = parseFloat(getComputedStyle(text).fontSize);
+
+				const statusBar = {
+					show() {
+						statusBarEl.classList.remove("hide", "emergency");
+						clearTimeout(timeoutId);
+					},
+					hide(emergency = false) {
+						statusBarEl.classList.add(...["hide", emergency && "emergency"].filter(token => token));
+						clearTimeout(timeoutId);
+					},
+				}
+
+				if (!response) { // 紧急清屏
+					statusBar.hide(true);
+					return;
+				}
+				const data = JSON.parse(response);
 				icon.textContent = data.icon;
 				state.textContent = data.status;
 				description.textContent = data.description;
 
 				const PAGE_LIMIT = 140;
-				let pages = [];
-				while (data.text.length > 0) {
-					const s = data.text.slice(0, PAGE_LIMIT),
-						i = s.split("").reverse().join("").search(/(?<!^)(?:(?<![\p{Letter}\p{Number}_])(?=[\p{Letter}\p{Number}_])|(?<=[\p{Letter}\p{Number}_])(?![\p{Letter}\p{Number}_]))/u);
-					if (i != -1) {
-						pages.push(s.slice(0, PAGE_LIMIT - i));
-						data.text = data.text.slice(PAGE_LIMIT - i);
-					}
-					else {
-						pages.push(s);
-						data.text = data.text.slice(PAGE_LIMIT);
-					}
+				const pages = [];
+				while (data.text.length) {
+					const sliced = data.text.slice(0, PAGE_LIMIT),
+						index = sliced.split("").reverse().join("").search(/(?<!^)(?:(?<!\w)(?=\w)|(?<=\w)(?!\w))/u),
+						contains = index !== -1;
+					pages.push(contains ? sliced.slice(0, PAGE_LIMIT - index) : sliced);
+					data.text = data.text.slice(contains ? PAGE_LIMIT - index : PAGE_LIMIT);
 				}
 
-				const statusBar = text.parentElement;
-				statusBar.classList.remove("hide");
+				statusBar.show();
 				for (const page of pages) {
 					text.innerText = page;
 					const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
 					// 如果一切正常，保证是整数。
 					await delay(5000 * lines);
 				}
-				statusBar.classList.add("hide");
+				statusBar.hide();
 			};
 
 			webSocket.onclose = () => {
