@@ -4,12 +4,20 @@
 	"description": "BXM 大赏 叠加层",
 	"main": "www.js",
 	"type": "module",
+	"module": "esnext",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/otomad/BXM-Taishou-HUD.git"
+	},
+	"homepage": "https://github.com/otomad/BXM-Taishou-HUD",
+	"github": "https://github.com/otomad/BXM-Taishou-HUD",
+	"bugs": "https://github.com/otomad/BXM-Taishou-HUD/issues",
 	"scripts": {
 		"dev": "node src/www.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "",
-	"license": "",
+	"license": "GPL-3.0",
 	"dependencies": {
 		"ws": "^8.14.2"
 	}
