@@ -20,6 +20,7 @@
 			font-family: "Inter Variable", Inter, Roboto, "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
 			font-weight: 500;
 			letter-spacing: 0.05em;
+			overflow: hidden;
 		}
 
 		@supports (width: 100dvw) {
@@ -53,6 +54,7 @@
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
+			overflow: hidden;
 		}
 
 		#status-bar.hide {
@@ -68,12 +70,29 @@
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 		}
 
-		#status-bar > div:nth-child(1) {
+		#status-bar > .status {
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			gap: 4px;
-			margin-bottom: 5px;
+			margin-top: 5px;
+
+			#status-bar.playing & {
+				display: none;
+			}
+		}
+
+		#status-bar > .big-icon {
+			display: none;
+			position: absolute;
+			font-size: 188px;
+			right: 32px;
+			bottom: -50px;
+			opacity: 0.5;
+		}
+
+		#status-bar.playing > .big-icon {
+			display: block;
 		}
 
 		#status-bar.hide > div {
@@ -105,6 +124,7 @@
 		#description {
 			font-size: 18px;
 			font-weight: 400;
+			font-variant-numeric: tabular-nums;
 		}
 	</style>
 </head>
@@ -114,9 +134,10 @@
 		<div class="video">
 			<!-- <img src="https://gd-hbimg.huaban.com/67a1635d0ee5041842454fde8a0482e7c25fcb875c738-5HAGl3" alt="video" /> -->
 			<div id="status-bar" class="hide">
-				<div><span id="icon" class="icon">play_arrow</span><span id="state">正在播放</span></div>
+				<div class="status"><span id="icon" class="icon">play_arrow</span><span id="state">正在播放</span></div>
 				<div id="status">作品名</div>
 				<div id="description">注释</div>
+				<i class="icon big-icon">play_circle</i>
 			</div>
 		</div>
 	</div>
@@ -158,8 +179,18 @@
 					return;
 				}
 				const data = JSON.parse(response);
-				icon.textContent = data.icon;
-				state.textContent = data.status;
+
+				statusBarEl.classList.remove("playing", "voter");
+				if (data.type === "playing") {
+					icon.textContent = "play_arrow";
+					state.textContent = "正在播放";
+					statusBarEl.classList.add("playing");
+				} else if (data.type === "voter") {
+					icon.textContent = "person";
+					state.textContent = "投票作者";
+					statusBarEl.classList.add("voter");
+				}
+
 				description.textContent = data.description;
 
 				const PAGE_LIMIT = 140;

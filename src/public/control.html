@@ -60,6 +60,16 @@
 			width: 100%;
 		}
 
+		select {
+			position: relative;
+			border: 0;
+			border-radius: 5px;
+			padding: 3px 7px;
+			background-color: white;
+			box-shadow: 0 0 0 0.5px #0000000d, 0 0.5px 2.5px #0000004d;
+			min-width: 80px;
+		}
+
 		input {
 			&[type="text"],
 			&[type="search"] {
@@ -169,7 +179,7 @@
 				}
 			}
 
-			.status {
+			.type {
 				font-weight: bold;
 			}
 
@@ -308,8 +318,11 @@
 				</div>
 
 				<div class="form">
-					<input type="text" id="icon" placeholder="图标" />
-					<input type="text" id="status" placeholder="状态" />
+					<select id="type">
+						<option value="playing">正在播放</option>
+						<option value="voter">投票作者</option>
+						<span>haha</span>
+					</select>
 					<input type="text" id="text" placeholder="内容" />
 					<input type="text" id="description" placeholder="注释" />
 					<button type="button" class="btn" id="send-btn">发送</button>
@@ -323,8 +336,7 @@
 	</div>
 
 	<script type="module">
-		const icon = document.getElementById("icon"),
-			state = document.getElementById("status"),
+		const type = document.getElementById("type"),
 			text = document.getElementById("text"),
 			description = document.getElementById("description"),
 			sendBtn = document.getElementById("send-btn"),
@@ -334,12 +346,11 @@
 		sendBtn.addEventListener("click", () => {
 			if (!text.value.trim()) return;
 			const msg = {
-				icon: icon.value,
-				status: state.value,
+				type: type.value,
 				text: text.value,
 				description: description.value,
 			};
-			icon.value = state.value = text.value = description.value = "";
+			text.value = description.value = "";
 			const url = new URL("/api/send", location.origin);
 			url.searchParams.set("msg", JSON.stringify(msg));
 			fetch(url);
@@ -354,18 +365,37 @@
 			const label = document.createElement("button");
 			label.type = "button";
 			label.classList.add("label");
-			label.innerHTML = `
-				<i class="icon">${phrase.icon}</i>
+			if (phrase.type === "playing") {
+				label.innerHTML = `
+				<i class="icon">play_arrow</i>
 				<div class="content">
-					${"status,text,description".split(",").map(item =>
+					<span class="type">正在播放</span>
+					${"text,description".split(",").map(item =>
 						`<span class="${item}">${phrase[item]}</span>`).join("")}
 				</div>
 			`;
+			} else if (phrase.type === "voter") {
+				label.innerHTML = `
+				<i class="icon">person</i>
+				<div class="content">
+					<span class="type">投票作者</span>
+					${"text,description".split(",").map(item =>
+						`<span class="${item}">${phrase[item]}</span>`).join("")}
+				</div>
+			`;
+			} else {
+				label.innerHTML = `
+				<div class="content">
+					<span class="type">投票作者</span>
+					${"text,description".split(",").map(item =>
+						`<span class="${item}">${phrase[item]}</span>`).join("")}
+				</div>
+			`;
+			}
 			label.addEventListener("click", () => {
 				const index = [...label.parentElement.children].indexOf(label);
 				({
-					icon: icon.value,
-					status: state.value,
+					type: type.value,
 					text: text.value,
 					description: description.value,
 				} = phrases[index]);
