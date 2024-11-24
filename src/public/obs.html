@@ -17,7 +17,7 @@
 			margin: 0;
 			width: 1920px;
 			height: 1080px;
-			font-family: "Inter Variable", Inter, Roboto, "Noto Sans CJK SC", "Noto Sans SC", sans-serif;
+			font-family: "Inter Variable", Inter, Roboto, "Source Han Sans SC VF", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
 			font-weight: 500;
 			letter-spacing: 0.05em;
 			overflow: hidden;
@@ -48,7 +48,7 @@
 			background-color: #000000cc;
 			/* backdrop-filter: blur(5px); */
 			text-align: center;
-			padding: 10px 16px;
+			padding: 10px 16px 14px;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 			font-size: 2rem;
 			justify-content: center;
@@ -76,10 +76,10 @@
 			align-items: center;
 			gap: 4px;
 			margin-top: 5px;
+		}
 
-			#status-bar.playing & {
-				display: none;
-			}
+		.playing > .status {
+				display: none !important;
 		}
 
 		#status-bar > .big-icon {
@@ -114,7 +114,7 @@
 		#status-bar > div:last-child {
 			margin-bottom: 3px;
 		}
-		
+
 		/* prevent wrapping */
 		#status-bar.voter > div#status {
 			display: flex;
