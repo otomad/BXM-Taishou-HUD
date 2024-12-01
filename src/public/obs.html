@@ -128,6 +128,10 @@
 			letter-spacing: 0.1em;
 		}
 
+		#state::after {
+			content: attr(data-page_counter);
+		}
+
 		#description {
 			font-size: 18px;
 			font-weight: 400;
@@ -221,7 +225,10 @@
 					}));
 				}
 
-				for (const page of pages) {
+				for (let i = 0; i < pages.length; i++) {
+					const page = pages[i];
+
+					state.dataset.page_counter = `(${i + 1}/${pages.length})`;
 					if (data.type === "playing")
 						text.innerText = page;
 					else if (data.type === "voter") {
@@ -233,6 +240,8 @@
 					// 如果一切正常，保证是整数。
 					await delay(5000 * lines);
 				}
+
+				state.dataset.page_counter = '';
 
 				statusBar.hide();
 			};
