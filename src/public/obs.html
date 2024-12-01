@@ -207,10 +207,19 @@
 				const PAGE_LIMIT = 140;
 				let pages = [];
 				while (data.text.length) {
+					// No need to slice -- done
+					if (data.text.length <= PAGE_LIMIT) {
+						pages.push(data.text);
+						data.text = "";
+						break;
+					}
+
+					// Search from behind of slice for separator
 					const sliced = data.text.slice(0, PAGE_LIMIT),
 						index = sliced.split("").reverse().join("").search(/(?<!^)(?:(?<![\p{L}\p{N}_])(?=[\p{L}\p{N}_])|(?<=[\p{L}\p{N}_])(?![\p{L}\p{N}_]))(?!$)/u),
 						contains = index !== -1,
 						cutoff = sliced.length - index;
+					// Clump cut string into a page -- o/w take whole sliced string
 					pages.push(contains ? sliced.slice(0, cutoff) : sliced);
 					data.text = data.text.slice(contains ? cutoff : PAGE_LIMIT);
 				}
