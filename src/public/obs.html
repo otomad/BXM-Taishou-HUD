@@ -5,7 +5,7 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-	<title>输出 - BXM 作者选</title>
+	<title>输出 - 音MAD作者选</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="material-icons.css" />
@@ -74,7 +74,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 4px;
+			gap: 6px;
 			margin-top: 5px;
 		}
 
@@ -115,6 +115,10 @@
 			margin-bottom: 3px;
 		}
 
+		#status-bar.voter > #status > span {
+			line-height: 46px;
+		}
+
 		/* prevent wrapping */
 		#status-bar.voter > div#status {
 			display: flex;
@@ -130,6 +134,9 @@
 
 		#state::after {
 			content: attr(data-page_counter);
+			font-size: 16px;
+			font-variant-numeric: tabular-nums;
+			margin-left: 2px;
 		}
 
 		#description {
@@ -224,6 +231,8 @@
 					data.text = data.text.slice(contains ? cutoff : PAGE_LIMIT);
 				}
 
+				state.dataset.page_counter = '';
+
 				statusBar.show();
 
 				if (data.type === "voter") {
@@ -249,8 +258,6 @@
 					// 如果一切正常，保证是整数。
 					await delay(5000 * lines);
 				}
-
-				state.dataset.page_counter = '';
 
 				statusBar.hide();
 			};

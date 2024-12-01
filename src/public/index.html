@@ -5,15 +5,61 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-	<title>BXM 作者选</title>
+	<title>音MAD作者选</title>
+	<style>
+		.container {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			gap: 24px;
+		}
+
+		img {
+			height: 200px;
+		}
+
+		.buttons {
+			display: flex;
+			gap: 10px;
+		}
+
+		button {
+			appearance: none;
+			border: 0;
+			font-size: 13px;
+			border-radius: 5px;
+			padding: 6px 14px;
+			background: linear-gradient(180deg, #ffffff2b 0%, transparent 100%), #007aff;
+			user-select: none;
+			color: white;
+			position: relative;
+			overflow: hidden;
+			box-shadow: 0 0 0 0.5px #007aff1f, 0 1px 2.5px #007aff3d;
+
+			&:focus-visible {
+				box-shadow: 0 0 0 3px #007aff80, 0 0 0 0.5px #007aff1f, 0 1px 25px #007aff3d;
+			}
+
+			&:active::before {
+				position: absolute;
+				content: "";
+				inset: 0;
+				background-color: #0000001a;
+			}
+		}
+	</style>
 </head>
 
 <body>
 	<div class="container">
-		<ul>
-			<li><a href="control">控制</a></li>
-			<li><a href="obs">输出</a></li>
-		</ul>
+		<img src="https://lachrymal.net/otopick/res/char.webp" alt="音MAD作者选" />
+		<h1>音MAD作者选 - HUD</h1>
+		<div class="buttons">
+			<a href="control"><button>控制</button></a>
+			<a href="obs"><button class="secondary">输出</button></a>
+		</div>
 	</div>
 </body>
 
