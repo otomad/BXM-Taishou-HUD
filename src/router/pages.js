@@ -7,17 +7,18 @@ export default async function handleStaticPages(request, response) {
 		url = url.replace(/^\//, "");
 		url ||= "index";
 
-		let extension = extname(url).replace(/^\./, "");
-		if (!extension) {
-			extension = "html";
-			url += ".html";
-		}
 		const ext = (contentType, encoding) => ({ contentType, encoding });
 		const extensions = {
 			ico: ext("image/x-icon"),
 			html: ext("text/html", "utf-8"),
 			css: ext("text/css", "utf-8"),
 		}
+		let extension = extname(url).replace(/^\./, "");
+		if (!extension || !extensions.hasOwnProperty(extension)) {
+			extension = "html";
+			url += ".html";
+		}
+
 		let { contentType, encoding } = extensions[extension];
 		contentType ||= "application/octet-stream";
 
