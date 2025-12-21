@@ -1,4 +1,4 @@
-import { isFileExist, readFile } from "../utils/file.js";
+import { fileStats, isFileExist, readFile, readFileSlice } from "../utils/file.js";
 import { extname } from "path"
 
 export default async function handleStaticPages(request, response) {
@@ -27,9 +27,38 @@ export default async function handleStaticPages(request, response) {
 		const isExist = await isFileExist(import.meta.url, "../public", url);
 		if (!isExist) return false;
 
-		response.setHeader("Content-type", contentType);
-		const buffer = await readFile(import.meta.url, encoding, "../public", url);
-		response.end(buffer);
-		return true;
+        const stat = await fileStats(import.meta.url, "../public", url); 
+        if (!stat) return false;
+
+        const fileSize = stat.size;
+        const range = request.headers.range;
+
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-");
+            const start = parseInt(parts[0], 10);
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+            const chunksize = (end - start) + 1;
+
+            response.writeHead(206, {
+                "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+                "Accept-Ranges": "bytes",
+                "Content-Length": chunksize,
+                "Content-Type": contentType,
+            });
+
+            const buffer = await readFileSlice(import.meta.url, start, end, "../public", url);
+            response.end(buffer);
+            return true;
+        }
+		else {
+			response.writeHead(200, {
+                "Content-Length": fileSize,
+                "Content-Type": contentType,
+                "Accept-Ranges": "bytes",
+            });
+			const buffer = await readFile(import.meta.url, encoding, "../public", url);
+			response.end(buffer);
+			return true;
+		}
 	}
 }

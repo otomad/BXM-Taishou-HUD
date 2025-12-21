@@ -182,7 +182,6 @@
 			<button onclick="this.remove()" style="position: fixed;">授予自动播放权限</button>
 			<video
 				src="/"
-				style="display: none;"
 				id="video"
 				controls
 				disablepictureinpicture
@@ -241,7 +240,6 @@
 					alert(e)
 					return;
 				}
-				video.style.display = 'unset';
 
 				statusBarEl.classList.remove("playing", "voter");
 				icon.textContent = "play_arrow";
@@ -311,9 +309,7 @@
 						state.textContent = "投票作者";
 						statusBarEl.classList.add("voter");
 
-						show_page(data.voter, '', true).then(() => {
-							video.style.display = "none";
-						});
+						show_page(data.voter, '', true);
 					}
 				};
 				video.addEventListener('timeupdate', video_voter_handler);
