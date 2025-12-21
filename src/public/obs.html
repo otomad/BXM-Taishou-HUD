@@ -243,7 +243,6 @@
 					}
 
 					state.dataset.page_counter = '';
-					text.innerHTML = '';
 					description.textContent = desc;
 
 					statusBar.show();
@@ -261,6 +260,7 @@
 
 						state.dataset.page_counter = `(${i + 1}/${pages.length})`;
 
+						text.innerHTML = '';
 						if (do_split)
 							page.forEach(el => text.appendChild(el));
 						else
