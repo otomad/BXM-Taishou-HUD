@@ -204,7 +204,7 @@
 				}
 				const data = JSON.parse(response);
 
-				video.src = data.video;
+				video.src = `/videos/${data.text} [${data.description}].mp4`;
 				video.volume = data.volume;
 				try {
 					await video.play();

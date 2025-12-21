@@ -6,6 +6,7 @@ export default async function handleStaticPages(request, response) {
 		let { url } = request;
 		url = url.replace(/^\//, "");
 		url ||= "index";
+		url = decodeURIComponent(url);
 
 		const ext = (contentType, encoding) => ({ contentType, encoding });
 		const extensions = {
