@@ -220,9 +220,8 @@
 				state.textContent = "正在播放";
 				statusBarEl.classList.add("playing");
 
-				description.textContent = data.description;
 
-				const show_page = async (txt, do_split) => {
+				const show_page = async (txt, desc, do_split) => {
 					const PAGE_LIMIT = 140;
 					let pages = [];
 					while (txt.length) {
@@ -244,6 +243,8 @@
 					}
 
 					state.dataset.page_counter = '';
+					text.innerHTML = '';
+					description.textContent = desc;
 
 					statusBar.show();
 
@@ -273,17 +274,22 @@
 					statusBar.hide();
 				};
 
-				setTimeout(() => {
-					statusBarEl.classList.remove("playing", "voter");
-					icon.textContent = "person";
-					state.textContent = "投票作者";
-					statusBarEl.classList.add("voter");
+				const video_voter_handler = () => {
+					if (video.duration - video.currentTime < 3) {
+						video.removeEventListener('timeupdate', video_voter_handler);
 
-					show_page(data.voter, true).then(() => {
-						video.style.display = "none";
-					});
-				}, (video.duration - 3) * 1000);
-				await show_page(data.text, false);
+						statusBarEl.classList.remove("playing", "voter");
+						icon.textContent = "person";
+						state.textContent = "投票作者";
+						statusBarEl.classList.add("voter");
+
+						show_page(data.voter, '', true).then(() => {
+							video.style.display = "none";
+						});
+					}
+				};
+				video.addEventListener('timeupdate', video_voter_handler);
+				await show_page(data.text, data.description, false);
 			};
 
 			webSocket.onclose = () => {
