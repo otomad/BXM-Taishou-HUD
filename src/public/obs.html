@@ -49,8 +49,8 @@
 			position: absolute;
 			bottom: 0;
 			width: 100%;
-			background-color: #000000cc;
-			/* backdrop-filter: blur(5px); */
+			background-color: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(5px);
 			text-align: center;
 			padding: 10px;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
@@ -297,7 +297,7 @@
 
 						const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
 						// 如果一切正常，保证是整数。
-						await delay(2800 * lines);
+						await delay(2000 * lines + 1500);
 					}
 
 					statusBar.hide();
