@@ -210,6 +210,12 @@
 		let webSocket;
 
 		function start() {
+			const TARGET_WIDTH = 960
+			const TARGET_HEIGHT = 540
+			const diffWidth = TARGET_WIDTH - window.innerWidth
+			const diffHeight = TARGET_HEIGHT - window.innerHeight
+			window.resizeBy(diffWidth, diffHeight)
+
 			if (webSocket) webSocket.close();
 
 			webSocket = new WebSocket("ws://localhost:2333/ws");
