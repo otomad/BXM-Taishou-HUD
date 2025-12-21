@@ -12,6 +12,7 @@
 	<style>
 		body {
 			background-color: transparent;
+			background-color: black;
 			color: #ffffffcc;
 			color-scheme: dark;
 			margin: 0;
@@ -147,6 +148,24 @@
 			font-variant-numeric: tabular-nums;
 			margin-bottom: 2px;
 		}
+
+		video {
+			width: 100vw;
+			height: 100vh;
+		}
+
+		video::-webkit-media-controls-panel {
+			justify-content: flex-start;
+			background: linear-gradient(to top, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.5) 100%);
+		}
+
+		video::-webkit-media-controls-fullscreen-button {
+			display: none;
+		}
+
+		video::-internal-media-controls-overflow-button {
+			display: none;
+		}
 	</style>
 </head>
 
@@ -161,7 +180,16 @@
 				<i class="icon big-icon">play_circle</i>
 			</div>
 			<button onclick="this.remove()" style="position: fixed;">授予自动播放权限</button>
-			<video src="/" style="display: none;" width="100%" id="video" controls></video>
+			<video
+				src="/"
+				style="display: none;"
+				id="video"
+				controls
+				disablepictureinpicture
+				playsinline
+				controlslist="nofullscreen nodownload noremoteplayback"
+			>
+			</video>
 		</div>
 	</div>
 
