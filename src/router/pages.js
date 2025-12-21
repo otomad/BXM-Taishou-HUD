@@ -12,6 +12,7 @@ export default async function handleStaticPages(request, response) {
 			ico: ext("image/x-icon"),
 			html: ext("text/html", "utf-8"),
 			css: ext("text/css", "utf-8"),
+			mp4: ext("video/mp4"),
 		}
 		let extension = extname(url).replace(/^\./, "");
 		if (!extension || !extensions.hasOwnProperty(extension)) {

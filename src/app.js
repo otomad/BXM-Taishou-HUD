@@ -12,5 +12,5 @@ export default async function serverHandler(request, response) {
 	if (await handleSendMessage(request, response)) return true;
 
 	// 未命中路由
-	handleNotFound();
+	handleNotFound(response);
 }

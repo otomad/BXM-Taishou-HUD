@@ -314,21 +314,14 @@
 
 			<div class="window-content">
 				<div class="phrases-container">
-					<div id="phrases"></div>
+					<select id="phrases"></select>
 				</div>
 
 				<div class="form">
-					<select id="type">
-						<option value="playing">正在播放</option>
-						<option value="voter">投票作者</option>
-						<span>haha</span>
-					</select>
-					<input type="text" id="text" placeholder="内容" />
-					<input type="text" id="description" placeholder="注释" />
+					<button type="button" class="btn danger" id="clear-btn">紧急清屏</button>
 					<button type="button" class="btn" id="send-btn">发送</button>
 				</div>
 
-				<button type="button" class="btn danger" id="clear-btn">紧急清屏</button>
 			</div>
 
 		</div>
@@ -336,21 +329,16 @@
 	</div>
 
 	<script type="module">
-		const type = document.getElementById("type"),
-			text = document.getElementById("text"),
-			description = document.getElementById("description"),
-			sendBtn = document.getElementById("send-btn"),
+		const sendBtn = document.getElementById("send-btn"),
 			clearBtn = document.getElementById("clear-btn"),
 			time = document.getElementById("time");
 
 		sendBtn.addEventListener("click", () => {
-			if (!text.value.trim()) return;
-			const msg = {
-				type: type.value,
-				text: text.value,
-				description: description.value,
-			};
-			text.value = description.value = "";
+			if (!document.getElementById("phrases").value) {
+				alert('未选择发送内容');
+				return;
+			}
+			const msg = phrases[document.getElementById("phrases").value];
 			const url = new URL("/api/send", location.origin);
 			url.searchParams.set("msg", JSON.stringify(msg));
 			fetch(url);
@@ -361,45 +349,17 @@
 		});
 
 		const phrases = await (await fetch("/api/phrases")).json();
-		for (const phrase of phrases) {
-			const label = document.createElement("button");
-			label.type = "button";
+		for (let i = 0; i < phrases.length; i++) {
+			const phrase = phrases[i];
+			const label = document.createElement("option");
 			label.classList.add("label");
-			if (phrase.type === "playing") {
-				label.innerHTML = `
-				<i class="icon">play_arrow</i>
+			label.value = i;
+			label.innerHTML = `
 				<div class="content">
-					<span class="type">正在播放</span>
 					${"text,description".split(",").map(item =>
 						`<span class="${item}">${phrase[item]}</span>`).join("")}
 				</div>
 			`;
-			} else if (phrase.type === "voter") {
-				label.innerHTML = `
-				<i class="icon">person</i>
-				<div class="content">
-					<span class="type">投票作者</span>
-					${"text,description".split(",").map(item =>
-						`<span class="${item}">${phrase[item]}</span>`).join("")}
-				</div>
-			`;
-			} else {
-				label.innerHTML = `
-				<div class="content">
-					<span class="type">投票作者</span>
-					${"text,description".split(",").map(item =>
-						`<span class="${item}">${phrase[item]}</span>`).join("")}
-				</div>
-			`;
-			}
-			label.addEventListener("click", () => {
-				const index = [...label.parentElement.children].indexOf(label);
-				({
-					type: type.value,
-					text: text.value,
-					description: description.value,
-				} = phrases[index]);
-			});
 			document.getElementById("phrases").append(label);
 		}
 

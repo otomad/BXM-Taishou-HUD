@@ -160,11 +160,21 @@
 				<div id="description">注释</div>
 				<i class="icon big-icon">play_circle</i>
 			</div>
+			<button onclick="this.remove()" style="position: fixed;">授予自动播放权限</button>
+			<video src="/" style="display: none;" width="100%" id="video"></video>
 		</div>
 	</div>
 
 	<script type="module">
 		const APPARENT_LINE_HEIGHT = 14;
+		const icon = document.getElementById("icon"),
+			state = document.getElementById("state"),
+			text = document.getElementById("status"),
+			description = document.getElementById("description"),
+			statusBarEl = document.getElementById("status-bar"),
+			statusFontSize = parseFloat(getComputedStyle(text).fontSize),
+			video = document.getElementById("video");
+
 		let timeoutId;
 		const delay = ms => new Promise(resolve => timeoutId = setTimeout(resolve, ms))
 		let webSocket;
@@ -176,13 +186,6 @@
 
 			webSocket.onmessage = async e => {
 				const { data: response } = e;
-
-				const icon = document.getElementById("icon"),
-					state = document.getElementById("state"),
-					text = document.getElementById("status"),
-					description = document.getElementById("description"),
-					statusBarEl = document.getElementById("status-bar"),
-					statusFontSize = parseFloat(getComputedStyle(text).fontSize);
 
 				const statusBar = {
 					show() {
@@ -201,68 +204,86 @@
 				}
 				const data = JSON.parse(response);
 
-				statusBarEl.classList.remove("playing", "voter");
-				if (data.type === "playing") {
-					icon.textContent = "play_arrow";
-					state.textContent = "正在播放";
-					statusBarEl.classList.add("playing");
-				} else if (data.type === "voter") {
-					icon.textContent = "person";
-					state.textContent = "投票作者";
-					statusBarEl.classList.add("voter");
+				video.src = data.video;
+				video.volume = data.volume;
+				try {
+					await video.play();
 				}
+				catch (e) {
+					alert(e)
+					return;
+				}
+				video.style.display = 'unset';
+
+				statusBarEl.classList.remove("playing", "voter");
+				icon.textContent = "play_arrow";
+				state.textContent = "正在播放";
+				statusBarEl.classList.add("playing");
 
 				description.textContent = data.description;
 
-				const PAGE_LIMIT = 140;
-				let pages = [];
-				while (data.text.length) {
-					// No need to slice -- done
-					if (data.text.length <= PAGE_LIMIT) {
-						pages.push(data.text);
-						data.text = "";
-						break;
+				const show_page = async (txt, do_split) => {
+					const PAGE_LIMIT = 140;
+					let pages = [];
+					while (txt.length) {
+						// No need to slice -- done
+						if (txt.length <= PAGE_LIMIT) {
+							pages.push(txt);
+							txt = "";
+							break;
+						}
+
+						// Search from behind of slice for separator
+						const sliced = txt.slice(0, PAGE_LIMIT),
+							index = sliced.split("").reverse().join("").search(/(?<!^)(?:(?<![\p{L}\p{N}_])(?=[\p{L}\p{N}_])|(?<=[\p{L}\p{N}_])(?![\p{L}\p{N}_]))(?!$)/u),
+							contains = index !== -1,
+							cutoff = sliced.length - index;
+						// Clump cut string into a page -- o/w take whole sliced string
+						pages.push(contains ? sliced.slice(0, cutoff) : sliced);
+						txt = txt.slice(contains ? cutoff : PAGE_LIMIT);
 					}
 
-					// Search from behind of slice for separator
-					const sliced = data.text.slice(0, PAGE_LIMIT),
-						index = sliced.split("").reverse().join("").search(/(?<!^)(?:(?<![\p{L}\p{N}_])(?=[\p{L}\p{N}_])|(?<=[\p{L}\p{N}_])(?![\p{L}\p{N}_]))(?!$)/u),
-						contains = index !== -1,
-						cutoff = sliced.length - index;
-					// Clump cut string into a page -- o/w take whole sliced string
-					pages.push(contains ? sliced.slice(0, cutoff) : sliced);
-					data.text = data.text.slice(contains ? cutoff : PAGE_LIMIT);
-				}
+					state.dataset.page_counter = '';
 
-				state.dataset.page_counter = '';
+					statusBar.show();
 
-				statusBar.show();
-
-				if (data.type === "voter") {
-					pages = pages.map(p => p.split('、').filter(s => s !== '' && s !== '、').map((w, i, pp) => {
-						let el = document.createElement('SPAN');
-						el.innerText = (i + 1 === pp.length) ? w : w + '、';
-						return el;
-					}));
-				}
-
-				for (let i = 0; i < pages.length; i++) {
-					const page = pages[i];
-
-					state.dataset.page_counter = `(${i + 1}/${pages.length})`;
-					if (data.type === "playing")
-						text.innerText = page;
-					else if (data.type === "voter") {
-						text.textContent = '';
-						page.forEach(el => text.appendChild(el));
+					if (do_split) {
+						pages = pages.map(p => p.split('、').filter(s => s !== '' && s !== '、').map((w, i, pp) => {
+							let el = document.createElement('SPAN');
+							el.innerText = (i + 1 === pp.length) ? w : w + '、';
+							return el;
+						}));
 					}
 
-					const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
-					// 如果一切正常，保证是整数。
-					await delay(5000 * lines);
-				}
+					for (let i = 0; i < pages.length; i++) {
+						const page = pages[i];
 
-				statusBar.hide();
+						state.dataset.page_counter = `(${i + 1}/${pages.length})`;
+
+						if (do_split)
+							page.forEach(el => text.appendChild(el));
+						else
+							text.innerText = page;
+
+						const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
+						// 如果一切正常，保证是整数。
+						await delay(5000 * lines);
+					}
+
+					statusBar.hide();
+				};
+
+				setTimeout(() => {
+					statusBarEl.classList.remove("playing", "voter");
+					icon.textContent = "person";
+					state.textContent = "投票作者";
+					statusBarEl.classList.add("voter");
+
+					show_page(data.voter, true).then(() => {
+						video.style.display = "none";
+					});
+				}, (video.duration - 3) * 1000);
+				await show_page(data.text, false);
 			};
 
 			webSocket.onclose = () => {
