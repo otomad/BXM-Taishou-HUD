@@ -11,9 +11,8 @@
 	<link rel="stylesheet" href="material-icons.css" />
 	<style>
 		body {
-			background-color: transparent;
 			background-color: black;
-			color: #ffffffcc;
+			color: white;
 			color-scheme: dark;
 			margin: 0;
 			width: 1920px;
@@ -50,7 +49,7 @@
 			bottom: 0;
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.5);
-			backdrop-filter: blur(5px);
+			backdrop-filter: blur(12px);
 			text-align: center;
 			padding: 10px;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
@@ -64,6 +63,12 @@
 		#status-bar.hide {
 			transform: translateY(100%);
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
+
+			> .big-icon {
+				scale: 2;
+				rotate: -45deg;
+				transition-timing-function: cubic-bezier(0, 0, 1, 0);
+			}
 		}
 
 		#status-bar.emergency {
@@ -72,6 +77,7 @@
 
 		#status-bar > div {
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
+			text-shadow: 0 0 0.2em rgba(0, 0, 0, 0.4);
 		}
 
 		#status-bar > .status {
@@ -92,7 +98,8 @@
 			font-size: 188px;
 			right: 32px;
 			bottom: -50px;
-			opacity: 0.5;
+			opacity: 0.3;
+			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 		}
 
 		#status-bar.playing > .big-icon {
@@ -101,18 +108,7 @@
 
 		#status-bar.hide > div {
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
-		}
-
-		#status-bar.hide > div:nth-child(1) {
-			transform: translateY(4rem);
-		}
-
-		#status-bar.hide > div:nth-child(2) {
-			transform: translateY(8rem);
-		}
-
-		#status-bar.hide > div:nth-child(3) {
-			transform: translateY(12rem);
+			transform: translateY(calc(sibling-index() * 4rem));
 		}
 
 		#status-bar > div:last-child {
@@ -159,7 +155,15 @@
 
 		video::-webkit-media-controls-panel {
 			justify-content: flex-start;
-			background: linear-gradient(to top, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.5) 100%);
+			background: linear-gradient(to top, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.4) 100%);
+		}
+
+		video::-webkit-media-controls-panel {
+			padding-top: 4px;
+		}
+
+		video::-webkit-media-controls-timeline {
+			padding-bottom: 0;
 		}
 
 		video::-webkit-media-controls-fullscreen-button {
@@ -303,7 +307,7 @@
 
 						const lines = text.clientHeight / (statusFontSize + APPARENT_LINE_HEIGHT);
 						// 如果一切正常，保证是整数。
-						await delay(2000 * lines + 1500);
+						await delay(2000 * lines + 2000);
 					}
 
 					statusBar.hide();
