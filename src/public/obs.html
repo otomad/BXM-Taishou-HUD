@@ -151,6 +151,7 @@
 		video {
 			width: 100vw;
 			height: 100vh;
+			background-color: black;
 		}
 
 		video::-webkit-media-controls-panel {
@@ -170,8 +171,8 @@
 			display: none;
 		}
 
-		video::-internal-media-controls-overflow-button {
-			display: none;
+		video::-webkit-media-text-track-display {
+			top: 86% !important;
 		}
 	</style>
 </head>
@@ -196,6 +197,12 @@
 				controlslist="nofullscreen nodownload noremoteplayback"
 				poster="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
 			>
+				<track
+					id="track-captions"
+					default
+					kind="captions"
+					src="/"
+				/>
 			</video>
 		</div>
 	</div>
@@ -208,7 +215,8 @@
 			description = document.getElementById("description"),
 			statusBarEl = document.getElementById("status-bar"),
 			statusFontSize = parseFloat(getComputedStyle(text).fontSize),
-			video = document.getElementById("video");
+			video = document.getElementById("video"),
+			trackCaptions = document.getElementById("track-captions");
 
 		let timeoutId;
 		const delay = ms => new Promise(resolve => timeoutId = setTimeout(resolve, ms))
@@ -246,6 +254,7 @@
 				const data = JSON.parse(response);
 
 				video.src = `/videos/${data.text} [${data.description}].mp4`;
+				trackCaptions.src = `/videos/${data.text} [${data.description}].vtt`;
 				video.volume = data.volume;
 				try {
 					await video.play();

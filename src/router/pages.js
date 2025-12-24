@@ -14,6 +14,8 @@ export default async function handleStaticPages(request, response) {
 			html: ext("text/html", "utf-8"),
 			css: ext("text/css", "utf-8"),
 			mp4: ext("video/mp4"),
+			vtt: ext("text/vtt", "utf-8"),
+			srt: ext("text/plain", "utf-8"),
 		}
 		let extension = extname(url).replace(/^\./, "");
 		if (!extension || !extensions.hasOwnProperty(extension)) {
@@ -27,7 +29,7 @@ export default async function handleStaticPages(request, response) {
 		const isExist = await isFileExist(import.meta.url, "../public", url);
 		if (!isExist) return false;
 
-        const stat = await fileStats(import.meta.url, "../public", url); 
+        const stat = await fileStats(import.meta.url, "../public", url);
         if (!stat) return false;
 
         const fileSize = stat.size;
