@@ -10,24 +10,18 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link rel="stylesheet" href="material-icons.css" />
 	<style>
+		html,
 		body {
 			background-color: black;
 			color: white;
 			color-scheme: dark;
 			margin: 0;
-			width: 1920px;
-			height: 1080px;
+			width: 100vw;
+			height: 100vh;
 			font-family: "Inter Variable", Inter, Roboto, "Source Han Sans SC VF", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
 			font-weight: 500;
 			letter-spacing: 0.05em;
 			overflow: hidden;
-		}
-
-		@supports (width: 100dvw) {
-			body {
-				width: 100dvw;
-				height: 100dvh;
-			}
 		}
 
 		*,
@@ -51,13 +45,15 @@
 			background-color: rgba(0, 0, 0, 0.5);
 			backdrop-filter: blur(12px);
 			text-align: center;
-			padding: 10px;
+			padding: 0.5em;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
-			font-size: 2rem;
+			font-size: 1.35rem;
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
 			overflow: hidden;
+			line-height: 1;
+			gap: 0.25em
 		}
 
 		#status-bar.hide {
@@ -84,8 +80,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 6px;
-			margin-top: 5px;
+			gap: 0.1875em;
 		}
 
 		.playing > .status {
@@ -97,7 +92,7 @@
 			position: absolute;
 			font-size: 188px;
 			right: 32px;
-			bottom: -50px;
+			bottom: -70px;
 			opacity: 0.3;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
 		}
@@ -108,16 +103,16 @@
 
 		#status-bar.hide > div {
 			transition-timing-function: cubic-bezier(0, 0, 1, 0);
-			transform: translateY(calc(sibling-index() * 4rem));
+			transform: translateY(calc(sibling-index() * 2em));
 		}
 
 		#status-bar > div:last-child {
-			margin-bottom: 3px;
+			margin-bottom: 0.09375;
 		}
 
 		/* fix vertical alignment */
 		#status-bar.voter > #status > span {
-			line-height: 46px;
+			line-height: 1.4375em;
 		}
 
 		/* prevent wrapping */
@@ -125,11 +120,10 @@
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: center;
-			margin-top: 8px;
 		}
 
 		#state {
-			font-size: 24px;
+			font-size: 0.75em;
 			font-weight: 400;
 			letter-spacing: 0.1em;
 		}
@@ -142,10 +136,10 @@
 		}
 
 		#description {
-			font-size: 18px;
+			font-size: 0.5625em;
 			font-weight: 400;
 			font-variant-numeric: tabular-nums;
-			margin-bottom: 2px;
+			margin-bottom: 0.0625em;
 		}
 
 		video {
@@ -173,7 +167,7 @@
 
 		video::-webkit-media-text-track-display {
 			top: unset !important;
-			bottom: 8% !important;
+			bottom: 9% !important;
 		}
 	</style>
 </head>
@@ -224,11 +218,8 @@
 		let webSocket;
 
 		function start() {
-			const TARGET_WIDTH = 1281
-			const TARGET_HEIGHT = 721
-			const diffWidth = TARGET_WIDTH - window.innerWidth
-			const diffHeight = TARGET_HEIGHT - window.innerHeight
-			window.resizeBy(diffWidth, diffHeight)
+			const TARGET_WIDTH = 1280, TARGET_HEIGHT = 720;
+			window.resizeBy(TARGET_WIDTH - window.innerWidth, TARGET_HEIGHT - window.innerHeight);
 
 			if (webSocket) webSocket.close();
 
