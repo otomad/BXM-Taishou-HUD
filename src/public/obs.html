@@ -263,8 +263,7 @@
 				state.textContent = "正在播放";
 				statusBarEl.classList.add("playing");
 
-
-				const show_page = async (txt, desc, do_split) => {
+				const split_pages = (txt) => {
 					const PAGE_LIMIT = 140;
 					let pages = [];
 					while (txt.length) {
@@ -284,7 +283,10 @@
 						pages.push(contains ? sliced.slice(0, cutoff) : sliced);
 						txt = txt.slice(contains ? cutoff : PAGE_LIMIT);
 					}
+					return pages;
+				};
 
+				const show_page = async (pages, desc, do_split) => {
 					state.dataset.page_counter = '';
 					description.textContent = desc;
 
@@ -318,7 +320,8 @@
 				};
 
 				const video_voter_handler = () => {
-					if (video.duration - video.currentTime < 3) {
+					const pages = split_pages(data.voter);
+					if (video.duration - video.currentTime < pages.length * 7) { // crude af
 						video.removeEventListener('timeupdate', video_voter_handler);
 
 						statusBarEl.classList.remove("playing", "voter");
@@ -326,11 +329,11 @@
 						state.textContent = "投票作者";
 						statusBarEl.classList.add("voter");
 
-						show_page(data.voter, '', true);
+						show_page(pages, '', true);
 					}
 				};
 				video.addEventListener('timeupdate', video_voter_handler);
-				await show_page(data.text, data.description, false);
+				await show_page(split_pages(data.text), data.description, false);
 			};
 
 			webSocket.onclose = () => {
