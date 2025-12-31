@@ -319,7 +319,9 @@
 					<select id="phrases" multiple></select>
 				</div>
 
+				
 				<div class="form">
+					<input type="range" name="volume" id="volume" max="100" min="0" value="100">
 					<button type="button" class="btn danger" id="clear-btn">紧急清屏</button>
 					<button type="button" class="btn" id="send-btn">发送</button>
 				</div>
@@ -333,7 +335,8 @@
 	<script type="module">
 		const sendBtn = document.getElementById("send-btn"),
 			clearBtn = document.getElementById("clear-btn"),
-			time = document.getElementById("time");
+			time = document.getElementById("time"),
+			volume = document.getElementById("volume");
 
 		sendBtn.addEventListener("click", () => {
 			if (!document.getElementById("phrases").value) {
@@ -341,6 +344,8 @@
 				return;
 			}
 			const msg = phrases[document.getElementById("phrases").value];
+			if (volume.value)
+				msg.volume = volume.value / 100;
 			const url = new URL("/api/send", location.origin);
 			url.searchParams.set("msg", JSON.stringify(msg));
 			fetch(url);
@@ -363,6 +368,9 @@
 						`<span class="${item}">${phrase[item]}</span>`).join("")}
 				</div>
 			`;
+			label.addEventListener('click', () => {
+				volume.value = phrase.volume * 100;
+			});
 			document.getElementById("phrases").append(label);
 		}
 

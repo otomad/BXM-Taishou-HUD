@@ -1,4 +1,7 @@
-import { fileStats, isFileExist, readFile, readFileSlice } from "../utils/file.js";
+import path from 'path';
+import { resolve } from "path";
+import { readdirSync } from "fs";
+import { useDirname, fileStats, isFileExist, readFile, readFileSlice } from "../utils/file.js";
 import { extname } from "path"
 
 export default async function handleStaticPages(request, response) {
@@ -21,6 +24,20 @@ export default async function handleStaticPages(request, response) {
 		if (!extension || !extensions.hasOwnProperty(extension)) {
 			extension = "html";
 			url += ".html";
+		}
+
+		// FIXME: This is really bad
+		if (path.normalize(url).startsWith(path.join('videos', path.sep)) && ['mp4', 'vtt', 'srt'].includes(extension)) {
+			const dir = path.dirname(url);
+			const fn = path.basename(url);
+			const m = fn.match(/\[BV.*\]/)?.[0];
+			
+			if (m) {
+				const { __dirname } = useDirname(import.meta.url);
+				const match = readdirSync(resolve(__dirname, "../public", dir)).find(f => f.includes(m) && f.endsWith(extension));
+				if (match)
+					url = path.join(dir, match); 
+			}
 		}
 
 		let { contentType, encoding } = extensions[extension];
