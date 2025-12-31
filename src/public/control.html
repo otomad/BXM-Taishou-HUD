@@ -175,10 +175,6 @@
 			.content {
 				text-align: justify;
 				
-				&::before {
-					content: '(' attr(data-total) ')';
-				}
-
 				> * {
 					margin-right: 0.5em;
 				}
@@ -361,7 +357,8 @@
 			label.classList.add("label");
 			label.value = i;
 			label.innerHTML = `
-				<div class="content"${phrase.total ? ` data-total="${phrase.total}"` : ''}">
+				<div class="content">
+					${phrase.total ? `<span>${phrase.total}</span>` : ''}
 					${"text,description".split(",").map(item =>
 						`<span class="${item}">${phrase[item]}</span>`).join("")}
 				</div>
