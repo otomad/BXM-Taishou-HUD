@@ -47,7 +47,7 @@
 			text-align: center;
 			padding: 0.5em;
 			transition: all cubic-bezier(0, 0, 0, 1) 500ms;
-			font-size: 1.35rem;
+			font-size: 2rem;
 			justify-content: center;
 			align-items: center;
 			flex-direction: column;
@@ -183,7 +183,6 @@
 				<div id="description">注释</div>
 				<i class="icon big-icon">play_circle</i>
 			</div>
-			<button onclick="this.remove()" style="position: fixed; z-index: 114514; padding: 12px 16px; font-weight: 500;">授予自动播放权限</button>
 			<video
 				src="/"
 				id="video"
@@ -219,8 +218,8 @@
 		let webSocket;
 
 		function start() {
-			const TARGET_WIDTH = 1280, TARGET_HEIGHT = 720;
-			window.resizeBy(TARGET_WIDTH - window.innerWidth, TARGET_HEIGHT - window.innerHeight);
+			// const TARGET_WIDTH = 1280, TARGET_HEIGHT = 720;
+			// window.resizeBy(TARGET_WIDTH - window.innerWidth, TARGET_HEIGHT - window.innerHeight);
 
 			if (webSocket) webSocket.close();
 
@@ -242,6 +241,8 @@
 
 				if (!response) { // 紧急清屏
 					statusBar.hide(true);
+					video.src = '';
+					trackCaptions.src = '';
 					return;
 				}
 				const data = JSON.parse(response);
