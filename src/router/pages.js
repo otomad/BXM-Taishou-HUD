@@ -35,7 +35,7 @@ export default async function handleStaticPages(request, response) {
 				const { __dirname } = useDirname(import.meta.url);
 				const match = readdirSync(resolve(__dirname, "../public", 'videos/')).find(f => f.includes(m) && f.endsWith(extension));
 				if (match)
-					url = path.join(dir, match); 
+					url = path.join('videos/', match); 
 			}
 		}
 
