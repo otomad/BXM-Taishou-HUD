@@ -246,7 +246,6 @@
 					return;
 				}
 				const data = JSON.parse(response);
-				console.log(data)
 
 				video.src = `/videos/${data.text} [${data.description}].mp4`;
 				trackCaptions.src = `/videos/${data.text} [${data.description}].vtt`;
