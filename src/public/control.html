@@ -368,9 +368,6 @@
 						`<span class="${item}">${phrase[item]}</span>`).join("")}
 				</div>
 			`;
-			label.addEventListener('click', () => {
-				volume.value = phrase.volume * 100;
-			});
 			document.getElementById("phrases").append(label);
 		}
 
